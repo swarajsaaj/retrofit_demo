@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -40,6 +41,35 @@ public class MainActivity extends AppCompatActivity {
 
         PostService postService = retrofit.create(PostService.class);
 
+        //getAllPosts(postService);
+
+        Post newPost = new Post();
+        newPost.setId(100);
+        newPost.setUserId(200);
+        newPost.setTitle("Sample title");
+        newPost.setBody("Sample data.");
+        createPost(postService, newPost);
+
+    }
+
+    private void createPost(PostService postService, Post newPost) {
+
+        Call<Post> call = postService.createPost(newPost);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                displayPost(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Unable to create post" , Toast.LENGTH_LONG).show();
+                Log.e(TAG,t.toString());
+            }
+        });
+    }
+
+    private void getAllPosts(PostService postService) {
         Call<List<Post>> getAllPostsCall = postService.getAllPosts();
 
         getAllPostsCall.enqueue(new Callback<List<Post>>() {
@@ -53,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "Error occured while fetching post.");
             }
         });
-
     }
 
     private void initViews() {

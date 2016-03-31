@@ -4,7 +4,9 @@ import java.util.List;
 
 import io.github.swarajsaaj.retrofitdemo.models.Post;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -18,5 +20,7 @@ public interface PostService {
     @GET("/posts/{id}")
     Call<List<Post>> getPostById(@Path("id") int id);
 
+    @POST("/posts")
+    Call<Post> createPost(@Body Post post);
 
 }
